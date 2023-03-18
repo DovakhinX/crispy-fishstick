@@ -90,7 +90,7 @@ export default function Home() {
       return;
     }
     navigator.permissions.query({ name: 'geolocation' }).then((result: PermissionStatus) => {
-      if (result.state === 'granted' || result.state === 'prompt') {
+      if (result.state === 'granted') {
         navigator.geolocation.getCurrentPosition((position) => {
           setCoordinates({ lat: position.coords.latitude, long: position.coords.longitude });
         });
