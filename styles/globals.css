@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  padding: 0;
+  margin: 0;
+  background-color: black;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
