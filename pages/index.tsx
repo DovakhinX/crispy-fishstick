@@ -1,10 +1,6 @@
 import Head from 'next/head'
 import { useState, useEffect } from 'react'
 
-
-
-
-
 interface task {
   id: number,
   date: Date,
@@ -18,12 +14,7 @@ interface Coordinates {
 
 }
 
-
-
-
 export default function Home() {
-
-
 
   const [taskData, setTaskData] = useState<task[]>([]);
   const [selectedTask, setSelectedTask] = useState<number | null>(null);
@@ -32,6 +23,7 @@ export default function Home() {
   const [editStatus, setEditStatus] = useState(false);
   const [coordinates, setCoordinates] = useState<Coordinates>({ lat: null, long: null });
   const [city, setCity] = useState<string>('');
+  const [locationEnabled, setLocationEnabled] = useState(false);
 
 
   function reverseGeo() {
@@ -87,15 +79,18 @@ export default function Home() {
   function getLocation() {
     if (!navigator.geolocation) {
       console.log('Geolocation is not supported');
+      setLocationEnabled(false);
       return;
     }
     navigator.permissions.query({ name: 'geolocation' }).then((result: PermissionStatus) => {
-      if (result.state === 'granted'|| result.state !== 'denied' ) {
+      if (result.state === 'granted' || result.state === 'prompt') {
         navigator.geolocation.getCurrentPosition((position) => {
           setCoordinates({ lat: position.coords.latitude, long: position.coords.longitude });
+          setLocationEnabled(true);
         });
       } else if (result.state === 'denied') {
         console.log('Location permission denied');
+        setLocationEnabled(false);
         return;
       }
     })
@@ -212,7 +207,7 @@ export default function Home() {
                   </li>
                 ))}
               </ul>
-              {coordinates.lat ? <p className='self-center py-4'>Your Location:{city}</p> : <p className='self-center py-4'>(Please enable your location)</p>}
+              {locationEnabled? <p className='self-center py-4'>Your Location:{city}</p> : <p className='self-center py-4'>(Please enable your location services)</p>}
             </div>
           </div>
         </div>
