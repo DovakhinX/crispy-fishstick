@@ -181,35 +181,40 @@ export default function Home() {
       </Head>
       <main className='container bg-slate-600 w-96  h-screen px-4 py-6'>
         <div className='flex flex-col '>
-          <div className='flex flex-col gap-5'>
-            <div className='flex flex-col gap-5  items-center '>
-              <input className='rounded w-full' value={task} onChange={(e) => setTask(e.target.value)} />
-              <input className='rounded w-40' type='date' value={deadline.toISOString().slice(0, 10)} onChange={handleDate} />
-            </div>
-            {editStatus ? (<div className='flex flex-row gap-3 justify-center'>
-              <button className='bg-slate-400 rounded px-2 py-1' onClick={(event) => updateTask(event)}>Confirm Edit</button>
-              <button className='bg-slate-400 rounded px-2 py-1' onClick={() => setEditStatus(false)}>Cancel Edit</button>
-            </div>) : (<div className='flex flex-row gap-3 justify-center'>
-              <button className='bg-slate-400 rounded px-2 py-1' onClick={(event) => addTask(event)}>Add Task</button>
-              <button className='bg-slate-400 rounded px-2 py-1' onClick={(event) => removeTask(event)}>Remove Task</button>
-              <button className='bg-slate-400 rounded px-2 py-1 z-10' onClick={(event) => editTask(event)}>Edit Task</button>
-            </div>)}
+          {!locationEnabled ? (<p className='self-center py-4'>(Please enable your location services)</p>) : (
+            <div className='flex flex-col gap-5'>
 
-            <div className='rounded-sm flex-col flex  '>
-              <ul>
-                {taskData.map((item) => (
-                  <li key={item.id} onClick={() => selectedTask === item.id ? setSelectedTask(null) : setSelectedTask(item.id)} className={`${selectedTask === item.id ? 'bg-slate-100' : 'bg-slate-300'}`}>
-                    <div className='flex  justify-between items-center px-1'>
-                      <p>{item.task}</p>
-                      <p>{item.date.toISOString().slice(0, 10)}</p>
-                    </div>
-                    <hr />
-                  </li>
-                ))}
-              </ul>
-              {locationEnabled? <p className='self-center py-4'>Your Location:{city}</p> : <p className='self-center py-4'>(Please enable your location services)</p>}
+              <div className='flex flex-col gap-5  items-center '>
+                <input className='rounded w-full' value={task} onChange={(e) => setTask(e.target.value)} />
+                <input className='rounded w-40' type='date' value={deadline.toISOString().slice(0, 10)} onChange={handleDate} />
+              </div>
+              {editStatus ? (<div className='flex flex-row gap-3 justify-center'>
+                <button className='bg-slate-400 rounded px-2 py-1' onClick={(event) => updateTask(event)}>Confirm Edit</button>
+                <button className='bg-slate-400 rounded px-2 py-1' onClick={() => setEditStatus(false)}>Cancel Edit</button>
+              </div>) : (<div className='flex flex-row gap-3 justify-center'>
+                <button className='bg-slate-400 rounded px-2 py-1' onClick={(event) => addTask(event)}>Add Task</button>
+                <button className='bg-slate-400 rounded px-2 py-1' onClick={(event) => removeTask(event)}>Remove Task</button>
+                <button className='bg-slate-400 rounded px-2 py-1 z-10' onClick={(event) => editTask(event)}>Edit Task</button>
+              </div>)}
+
+              <div className='rounded-sm flex-col flex  '>
+                <ul>
+                  {taskData.map((item) => (
+                    <li key={item.id} onClick={() => selectedTask === item.id ? setSelectedTask(null) : setSelectedTask(item.id)} className={`${selectedTask === item.id ? 'bg-slate-100' : 'bg-slate-300'}`}>
+                      <div className='flex  justify-between items-center px-1'>
+                        <p>{item.task}</p>
+                        <p>{item.date.toISOString().slice(0, 10)}</p>
+                      </div>
+                      <hr />
+                    </li>
+                  ))}
+                </ul>
+                <p className='self-center py-4'>Your Location:{city}</p>
+              </div>
             </div>
-          </div>
+
+          )}
+
         </div>
       </main>
     </>
