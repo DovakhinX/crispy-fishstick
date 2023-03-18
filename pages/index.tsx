@@ -51,43 +51,56 @@ export default function Home() {
     }
   }
 
-  const sendNotification = async(data: string) => {
-    const registration:ServiceWorkerRegistration | undefined = await navigator.serviceWorker.getRegistration();
+  const sendNotification = async (data: string) => {
+    const registration: ServiceWorkerRegistration | undefined = await navigator.serviceWorker.getRegistration();
     if (Notification.permission === 'granted') {
-      if(registration && 'showNotification' in registration) {
+      if (registration && 'showNotification' in registration) {
         registration.showNotification(data)
-      }else{
-      new Notification('The List', {
-        body: `${data}`,
-        icon: '/icon-192x192.png'
-      });}
-    }else{
-      if(Notification.permission !== 'denied'){
+      } else {
+        new Notification('The List', {
+          body: `${data}`,
+          icon: '/icon-192x192.png'
+        });
+      }
+    } else {
+      if (Notification.permission !== 'denied') {
         const permission = await Notification.requestPermission();
 
-        if(permission === 'granted'){
+        if (permission === 'granted') {
 
-          if(registration && 'showNotification' in registration) {
+          if (registration && 'showNotification' in registration) {
             registration.showNotification(data)
-          }else{
-          new Notification('The List', {
-            body: `${data}`,
-            icon: '/icon-192x192.png'
-          });
+          } else {
+            new Notification('The List', {
+              body: `${data}`,
+              icon: '/icon-192x192.png'
+            });
 
+          }
+        }
       }
     }
-    }
-  }
   };
- 
+
 
 
   function getLocation() {
-    navigator.geolocation.getCurrentPosition((position) => {
-      setCoordinates({ lat: position.coords.latitude, long: position.coords.longitude });
-    });
+    if (!navigator.geolocation) {
+      console.log('Geolocation is not supported');
+      return;
+    }
+    navigator.permissions.query({ name: 'geolocation' }).then((result: PermissionStatus) => {
+      if (result.state === 'granted' || result.state === 'prompt') {
+        navigator.geolocation.getCurrentPosition((position) => {
+          setCoordinates({ lat: position.coords.latitude, long: position.coords.longitude });
+        });
+      } else if (result.state === 'denied') {
+        console.log('Location permission denied');
+        return;
+      }
+    })
   }
+
 
 
 
@@ -95,7 +108,7 @@ export default function Home() {
   useEffect(() => {
     getLocation()
   }, []);
-//
+  //
   useEffect(() => {
     reverseGeo()
     // eslint-disable-next-line
